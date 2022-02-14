@@ -11,22 +11,19 @@ import org.springframework.stereotype.Component;
 
 import java.util.Date;
 
+@Component
 @RequiredArgsConstructor
-//@Component
-public class JobRunner implements ApplicationRunner {
-
+public class JobExcutionRunner implements ApplicationRunner {
     private final JobLauncher jobLauncher;
-    private final Job job;
+    private final Job jobexcution;
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
         JobParameters jobParameters = new JobParametersBuilder()
-                .addString("name", "user1")
-                .addLong("seq", 2L)
+                .addString("name", "user2")
                 .addDate("date", new Date())
-                .addDouble("age", 16.5)
                 .toJobParameters();
 
-        jobLauncher.run(job, jobParameters);
+        jobLauncher.run(jobexcution, jobParameters);
     }
 }
