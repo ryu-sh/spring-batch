@@ -1,4 +1,4 @@
-package io.springbatch.springbatch;
+package io.springbatch.springbatch.job;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.batch.core.Job;
@@ -11,19 +11,22 @@ import org.springframework.stereotype.Component;
 
 import java.util.Date;
 
-@Component
 @RequiredArgsConstructor
-public class JobExcutionRunner implements ApplicationRunner {
+//@Component
+public class JobRunner implements ApplicationRunner {
+
     private final JobLauncher jobLauncher;
-    private final Job jobexcution;
+    private final Job job;
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
         JobParameters jobParameters = new JobParametersBuilder()
-                .addString("name", "user2")
+                .addString("name", "user1")
+                .addLong("seq", 2L)
                 .addDate("date", new Date())
+                .addDouble("age", 16.5)
                 .toJobParameters();
 
-        jobLauncher.run(jobexcution, jobParameters);
+        jobLauncher.run(job, jobParameters);
     }
 }
