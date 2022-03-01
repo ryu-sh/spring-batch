@@ -31,6 +31,6 @@ spring:
   batch:
     job:
       enabled: true
-      names: job1, job2 # 이런식으로 job의 종류를 나열 할 수 있음.
+#      names: job1, job2 # 이런식으로 job의 종류를 나열 할 수 있음.
     jdbc:
-      initialize-schema: never
+      initialize-schema: always

@@ -16,7 +16,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
-@Configuration
+//@Configuration
 @RequiredArgsConstructor
 public class TaskletStepConfiguration {
     private final JobBuilderFactory jobBuilderFactory;
