@@ -10,9 +10,9 @@ import org.springframework.batch.repeat.RepeatStatus;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-//@Configuration
+@Configuration
 @RequiredArgsConstructor
-public class TransitionFlowConfiguration {
+public class CustomExitStatusConfiguration {
     private final JobBuilderFactory jobBuilderFactory;
     private final StepBuilderFactory stepBuilderFactory;
 
@@ -20,17 +20,10 @@ public class TransitionFlowConfiguration {
     public Job flowJob() {
         return jobBuilderFactory.get("flowJob")
                 .start(flowStep1())
-                    .on("FAILED")
-                    .to(flowStep2())
-                    .on("FAILED")
-                    .stop()
-                .from(flowStep1())
-                    .on("*")
-                    .to(flowStep3())
-                    .next(flowStep4())
-                .from(flowStep2())
-                    .on("*")
-                    .to(flowStep5())
+                .on("FAILED")
+                .to(flowStep2())
+                .on("PASS")
+                .stop()
                 .end()
                 .build();
     }
@@ -51,7 +44,9 @@ public class TransitionFlowConfiguration {
                 .tasklet((stepContribution, chunkContext) -> {
                     System.out.println("step2 was executed");
                     return RepeatStatus.FINISHED;
-                }).build();
+                })
+                .listener(new PassCheckingListener())
+                .build();
     }
 
     @Bean
@@ -59,24 +54,6 @@ public class TransitionFlowConfiguration {
         return stepBuilderFactory.get("step3")
                 .tasklet((stepContribution, chunkContext) -> {
                     System.out.println("step3 was executed");
-                    return RepeatStatus.FINISHED;
-                }).build();
-    }
-
-    @Bean
-    public Step flowStep4() {
-        return stepBuilderFactory.get("step4")
-                .tasklet((stepContribution, chunkContext) -> {
-                    System.out.println("step4 was executed");
-                    return RepeatStatus.FINISHED;
-                }).build();
-    }
-
-    @Bean
-    public Step flowStep5() {
-        return stepBuilderFactory.get("step5")
-                .tasklet((stepContribution, chunkContext) -> {
-                    System.out.println("step5 was executed");
                     return RepeatStatus.FINISHED;
                 }).build();
     }
