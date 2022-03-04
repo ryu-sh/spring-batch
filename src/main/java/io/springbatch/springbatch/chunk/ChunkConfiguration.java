@@ -1,40 +1,41 @@
-package io.springbatch.springbatch.etc;
+package io.springbatch.springbatch.chunk;
 
+import io.springbatch.springbatch.domain.Customer;
 import lombok.RequiredArgsConstructor;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
-import org.springframework.batch.core.configuration.annotation.JobScope;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
-import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
-import org.springframework.batch.core.step.tasklet.Tasklet;
 import org.springframework.batch.repeat.RepeatStatus;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-//@Configuration
+import java.util.Arrays;
+
+@Configuration
 @RequiredArgsConstructor
-public class ScopeConfiguration {
+public class ChunkConfiguration {
     private final JobBuilderFactory jobBuilderFactory;
     private final StepBuilderFactory stepBuilderFactory;
 
     @Bean
-    public Job scopeJob() {
+    public Job job() {
         return jobBuilderFactory.get("scopeJob")
                 .incrementer(new RunIdIncrementer())
-                .start(step1(null))
-                .listener(new JobListener())
+                .start(step1())
+                .next(step2())
                 .build();
     }
 
     @Bean
-    @JobScope
-    public Step step1(@Value("#{jobParameters['message']}") String message) {
-        System.out.println("message = " + message);
+    public Step step1() {
         return stepBuilderFactory.get("step1")
-                .tasklet(tasklet(null))
+                .<Customer, Customer>chunk(3)
+                .reader(new CustomItemReader(Arrays.asList(new Customer("user1"), new Customer("user2"), new Customer("user3"),
+                        new Customer("user4"))))
+                .processor(new CustomProcessor())
+                .writer(new CustomWriter())
                 .build();
     }
 
@@ -45,14 +46,5 @@ public class ScopeConfiguration {
                     System.out.println("step2 was executed");
                     return RepeatStatus.FINISHED;
                 }).build();
-    }
-
-    @Bean
-    @StepScope
-    public Tasklet tasklet(@Value("#{jobExecutionContext['name']}") String name) {
-        return ((stepContribution, chunkContext) -> {
-            System.out.println("tasklet has executed");
-            return RepeatStatus.FINISHED;
-        });
     }
 }
