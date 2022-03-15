@@ -13,7 +13,7 @@ import org.springframework.context.annotation.Configuration;
 
 import java.util.Arrays;
 
-@Configuration
+//@Configuration
 @RequiredArgsConstructor
 public class ChunkConfiguration {
     private final JobBuilderFactory jobBuilderFactory;
