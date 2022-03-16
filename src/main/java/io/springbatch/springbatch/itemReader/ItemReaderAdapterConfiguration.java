@@ -8,21 +8,16 @@ import org.springframework.batch.core.configuration.annotation.StepBuilderFactor
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
 import org.springframework.batch.item.ItemReader;
 import org.springframework.batch.item.ItemWriter;
-import org.springframework.batch.item.database.builder.JpaPagingItemReaderBuilder;
+import org.springframework.batch.item.adapter.ItemReaderAdapter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import javax.persistence.EntityManagerFactory;
-import java.util.HashMap;
-import java.util.Map;
-
+@Configuration
 @RequiredArgsConstructor
-//@Configuration
-public class JpaPagingConfiguration {
+public class ItemReaderAdapterConfiguration {
     private final JobBuilderFactory jobBuilderFactory;
     private final StepBuilderFactory stepBuilderFactory;
-    private final EntityManagerFactory entityManagerFactory;
-    private int chunkSize = 2;
+    private int chunkSize = 10;
 
     @Bean
     public Job job() {
@@ -35,31 +30,31 @@ public class JpaPagingConfiguration {
     @Bean
     public Step step1() {
         return stepBuilderFactory.get("step1")
-                .<Customer, Customer>chunk(chunkSize)
-                .reader(customerItemReader())
+                .<String, String>chunk(chunkSize)
+                .reader(customItemReader())
                 .writer(customItemWriter())
                 .build();
     }
 
     @Bean
-    public ItemReader<Customer> customerItemReader() {
-        Map<String, Object> parameters = new HashMap<>();
-        parameters.put("firstname", "A%");
+    public ItemReaderAdapter customItemReader() {
+        ItemReaderAdapter reader = new ItemReaderAdapter<>();
+        reader.setTargetObject(new CustomerService<String>());
+        reader.setTargetMethod("customRead");
 
-        return new JpaPagingItemReaderBuilder<Customer>()
-                .name("jpaPagingItemReader")
-                .entityManagerFactory(entityManagerFactory)
-                .pageSize(chunkSize)
-//                .queryString("select c from Customer c")
-                .queryString("select c from Customer c join fetch c.address")
-                .build();
+        return reader;
+    }
+
+//    @Bean
+    public Object customerService() {
+        return new CustomerService();
     }
 
     @Bean
-    public ItemWriter<Customer> customItemWriter() {
+    public ItemWriter<String> customItemWriter() {
         return items -> {
-            for (Customer customer : items) {
-                System.out.println("customer = " + customer.getAddress().getLocation());
+            for (String item : items) {
+                System.out.println("item = " + item);
             }
             System.out.println("end chunkSize");
         };
