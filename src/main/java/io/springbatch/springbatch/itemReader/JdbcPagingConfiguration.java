@@ -21,7 +21,7 @@ import javax.sql.DataSource;
 import java.util.HashMap;
 import java.util.Map;
 
-@Configuration
+//@Configuration
 @RequiredArgsConstructor
 public class JdbcPagingConfiguration {
     private final JobBuilderFactory jobBuilderFactory;
