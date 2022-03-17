@@ -22,7 +22,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RequiredArgsConstructor
-@Configuration
+//@Configuration
 public class JdbcItemWriterConfiguration {
     private final JobBuilderFactory jobBuilderFactory;
     private final StepBuilderFactory stepBuilderFactory;

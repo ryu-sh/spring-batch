@@ -7,7 +7,7 @@ import javax.persistence.*;
 
 @Getter
 @Setter
-//@Entity
+@Entity
 public class Address {
     @Id
     @GeneratedValue
