@@ -11,16 +11,19 @@ import org.springframework.batch.core.launch.support.RunIdIncrementer;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.batch.item.adapter.ItemReaderAdapter;
 import org.springframework.batch.item.adapter.ItemWriterAdapter;
+import org.springframework.batch.item.support.ClassifierCompositeItemProcessor;
 import org.springframework.batch.item.support.builder.CompositeItemProcessorBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RequiredArgsConstructor
-//@Configuration
-public class CompositionItemConfiguration {
+@Configuration
+public class ClassifierConfiguration {
     private final JobBuilderFactory jobBuilderFactory;
     private final StepBuilderFactory stepBuilderFactory;
     private int chunkSize = 10;
@@ -43,14 +46,18 @@ public class CompositionItemConfiguration {
                 .build();
     }
 
-    private ItemProcessor customItemProcessor() {
-        List itemProcessors = new ArrayList<>();
-        itemProcessors.add(new CustomItemProcessor());
-        itemProcessors.add(new CustomItemProcessor2());
+    @Bean
+    public ItemProcessor customItemProcessor() {
+        ClassifierCompositeItemProcessor processor = new ClassifierCompositeItemProcessor();
+        ProcessorClassifier<String, ItemProcessor<String, String>> classifier = new ProcessorClassifier<>();
+        Map<Integer, ItemProcessor<String, String>> processorMap = new HashMap<>();
+        processorMap.put(1, new CustomItemProcessor());
+        processorMap.put(2, new CustomItemProcessor2());
+        classifier.setMap(processorMap);
 
-        return new CompositeItemProcessorBuilder<>()
-                .delegates(itemProcessors)
-                .build();
+        processor.setClassifier(classifier);
+
+        return processor;
     }
 
     @Bean
