@@ -10,11 +10,11 @@ import javax.persistence.Id;
 @Data
 //@Entity
 public class Customer {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+//    @Id
+//    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    private String firstname;
-    private String lastname;
+    private String firstName;
+    private String lastName;
     private String birthdate;
 
     protected Customer() {

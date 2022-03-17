@@ -2,7 +2,6 @@ package io.springbatch.springbatch.itemReader;
 
 import org.springframework.stereotype.Service;
 
-@Service
 public class CustomerService<T> {
     private int cnt = 0;
 
