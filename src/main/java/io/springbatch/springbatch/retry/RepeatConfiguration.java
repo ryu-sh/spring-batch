@@ -102,6 +102,10 @@ public class RepeatConfiguration {
 
     @Bean
     public ExceptionHandler simpleLimitExceptionHandler() {
+        /*
+        bean으로 설정해야 3 설정값이 적용됨.
+        SimpleLimitExceptionHandler의 afterPropertiesSet()에서 limit값을 설정해주므로 bean으로 설정해야 한다.
+        */
         return new SimpleLimitExceptionHandler(3);
     }
 }
