@@ -1,4 +1,4 @@
-package io.springbatch.springbatch.retry.skip;
+package io.springbatch.springbatch.faultTolerant.skip;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package io.springbatch.springbatch.retry.skip;
+package io.springbatch.springbatch.faultTolerant.skip;
 
 public class SkipProcessor implements org.springframework.batch.item.ItemProcessor<String, String> {
     private int cnt = 0;

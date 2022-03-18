@@ -1,10 +1,5 @@
-package io.springbatch.springbatch.retry;
+package io.springbatch.springbatch.faultTolerant;
 
-import io.springbatch.springbatch.itemProcessor.CustomItemProcessor;
-import io.springbatch.springbatch.itemProcessor.CustomItemProcessor2;
-import io.springbatch.springbatch.itemProcessor.ProcessorClassifier;
-import io.springbatch.springbatch.itemReader.CustomerService;
-import io.springbatch.springbatch.itemWriter.CustomerWriterService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
@@ -12,9 +7,6 @@ import org.springframework.batch.core.configuration.annotation.JobBuilderFactory
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
 import org.springframework.batch.item.*;
-import org.springframework.batch.item.adapter.ItemReaderAdapter;
-import org.springframework.batch.item.adapter.ItemWriterAdapter;
-import org.springframework.batch.item.support.ClassifierCompositeItemProcessor;
 import org.springframework.batch.repeat.CompletionPolicy;
 import org.springframework.batch.repeat.RepeatCallback;
 import org.springframework.batch.repeat.RepeatContext;
@@ -22,15 +14,11 @@ import org.springframework.batch.repeat.RepeatStatus;
 import org.springframework.batch.repeat.exception.ExceptionHandler;
 import org.springframework.batch.repeat.exception.SimpleLimitExceptionHandler;
 import org.springframework.batch.repeat.policy.CompositeCompletionPolicy;
-import org.springframework.batch.repeat.policy.SimpleCompletionPolicy;
 import org.springframework.batch.repeat.policy.TimeoutTerminationPolicy;
 import org.springframework.batch.repeat.support.RepeatTemplate;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 //@Configuration
 @RequiredArgsConstructor
