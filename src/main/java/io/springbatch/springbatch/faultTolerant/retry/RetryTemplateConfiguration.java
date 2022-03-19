@@ -17,7 +17,7 @@ import org.springframework.retry.support.RetryTemplate;
 import java.util.HashMap;
 import java.util.Map;
 
-@Configuration
+//@Configuration
 @RequiredArgsConstructor
 public class RetryTemplateConfiguration {
     private final JobBuilderFactory jobBuilderFactory;
@@ -50,8 +50,9 @@ public class RetryTemplateConfiguration {
                 .faultTolerant()
 //                .skip(RetryableException.class)
 //                .skipLimit(2)
-//                .retry(RetryableException.class)
-//                .retryLimit(2)
+                .retry(RetryableException.class)
+                // 아래 정의한 retryTemplate의 limit 값보다 크거나 같아야 한다. https://www.inflearn.com/questions/482298
+                .retryLimit(2)
                 .build();
     }
 
